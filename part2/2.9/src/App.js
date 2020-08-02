@@ -1,26 +1,6 @@
 import React, { useState } from 'react'
 import Persons from './/components//Persons'
 
-const Filter = ({theFilter,theHandler}) =>{
-	return(<div><table><td>filter shown with</td><td><input value={theFilter} onChange={theHandler}/></td></table></div>)
-}
-
-const PersonForm = ({submitHandler,nameValue,phoneValue,nameHandle,phoneHandle}) => {
-	return(	<form onSubmit = {submitHandler}>
-
-		
-		        <div>
-        <table>
-          <tr><td>name:</td> <td><input id="theinput" value={nameValue} onChange = {nameHandle}/></td></tr>
-          <tr><td>number:</td><td> <input value={phoneValue} onChange = {phoneHandle}/></td></tr>
-      </table>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-    
-    </form>)
-}
 
 const App = () => {
   const [ persons, setPersons ] = useState([
@@ -39,7 +19,7 @@ const App = () => {
   		setNewName({name: newName.name, phone: event.target.value})
   }
 
-	const handleFilterChange = (event) =>{
+const handleFilterChange = (event) =>{
   		console.log( "the filter: ",filter)
   		setFilter(event.target.value)
   }
@@ -65,18 +45,37 @@ const personsToShow = filter.length > 0 ? persons.filter( p => p.name.substr(0,f
 
 
 
+const Filter = () => {
+	return(
+			<div><table><td>filter shown with</td><td><input value={filter} onChange={handleFilterChange}/></td></table></div>
+			
+		)
+}
+
   return (
     <div>
       <h2>Phonebook</h2>
 
-      <Filter theFilter ={filter} theHandler = {handleFilterChange}/>
+      <div><table><td>filter shown with</td><td><input value={filter} onChange={handleFilterChange}/></td></table></div>
     
       <h3>add a new</h3>
 
-      <PersonForm submitHandler= {addName} nameValue = {newName.name} nameHandle = {handleNameChange} phoneValue = {newName.phone} phoneHandle = {handlePhoneChange} />
 
+	<form onSubmit = {addName}>
+
+		
+		        <div>
+        <table>
+          <tr><td>name:</td> <td><input id="theinput" value={newName.name} onChange = {handleNameChange}/></td></tr>
+          <tr><td>number:</td><td> <input value={newName.phone} onChange = {handlePhoneChange}/></td></tr>
+      </table>
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+    
+    </form>
       <h3>Numbers</h3>
-      
       <div><Persons thePeople = {personsToShow} /></div>
     </div>
   )
