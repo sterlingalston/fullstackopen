@@ -16,9 +16,8 @@ const App = () => {
 
   const hook = () =>{
   	console.log('effect')
-
   	axios
-  		.get('http://restcountries.eu/rest/v2/all')
+  		.get('http:\/\/restcountries.eu\/rest\/v2\/all')
   		.then(response =>{
   			console.log('promise fulfilled')	
   			setCountries(response.data)
@@ -28,7 +27,7 @@ const App = () => {
 
   useEffect(hook, [])
   
-  
+  const [ newCountry, setCountry ] = useState({name: ''})
   const [filter, setFilter] = useState('')
 
   
