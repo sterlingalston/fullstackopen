@@ -31,16 +31,15 @@ const App = () => {
     { name: 'Arto Hellas', phone:'040-1234567' }
   ])
 
-const hook = () => {
+
+   useEffect(() => {
     personService
       .getAll()
         .then(initialPersons => {
         setPersons(initialPersons)
       })
         
-  }
-
-   useEffect(hook, [])
+  }, [])
 
   
   
@@ -62,42 +61,14 @@ const hook = () => {
   		setFilter(event.target.value)
   }
 
-  const handlePersonDelete = (event) =>{
-  	let namer = event.target.parentNode.getAttribute('name')
-  	let pid_to_delete = persons.find(p => p.name == namer ).id
-  	
-  	if(window.confirm("Delete "+ namer + "?"))
-  	{
-
-	  	console.log('deleted',namer, pid_to_delete)
-	  	personService.deleter(pid_to_delete).then(updatePersons => {
-	        hook()
-	      })
-        
-  	}
-  }
-
   const addName = (event) =>{
   		event.preventDefault()
   		
   		if(persons.filter(p => p.name == newName.name).length)
 
   			{
-  				/*
   				alert(`${newName.name} is already added to phonebook`)
-  				setNewName({name: '', phone: ''})*/
-
-  				if(window.confirm(`${newName.name} is already added to phonebook, replace the old number with the new one?`)){
-  					let pid_to_update = persons.find(p => p.name == newName.name ).id	
-  					let fndPerson   = persons.find(p => p.id == pid_to_update )
-  					let changedPerson = {...fndPerson,phone: newName.phone}
-  					personService.update(pid_to_update,changedPerson).then(updatedPersons => {
-  						hook()
-  						setNewName({name: '', phone: ''})
-  					})
-  					
-  				}
-
+  				setNewName({name: '', phone: ''})
   			}
   		else
   			{
@@ -129,7 +100,7 @@ const personsToShow = filter.length > 0 ? persons.filter( p => p.name.substr(0,f
 
       <h3>Numbers</h3>
       
-      <div><Persons thePeople = {personsToShow} delHandle = {handlePersonDelete}/></div>
+      <div><Persons thePeople = {personsToShow} /></div>
     </div>
   )
 }

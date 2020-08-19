@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Persons from './/components//Persons'
 import axios from 'axios'
-import personService from './/services//persons'
 
 const Filter = ({theFilter,theHandler}) =>{
 	return(<div><table><td>filter shown with</td><td><input value={theFilter} onChange={theHandler}/></td></table></div>)
@@ -31,18 +30,19 @@ const App = () => {
     { name: 'Arto Hellas', phone:'040-1234567' }
   ])
 
-const hook = () => {
-    personService
-      .getAll()
-        .then(initialPersons => {
-        setPersons(initialPersons)
-      })
-        
+
+  const hook = () =>{
+  	console.log('effect')
+  	axios
+  		.get('http://localhost:3001/persons')
+  		.then(response =>{
+  			console.log('promise fulfilled')	
+  			setPersons(response.data)
+  		})
+
   }
 
-   useEffect(hook, [])
-
-  
+  useEffect(hook, [])
   
   const [ newName, setNewName ] = useState({name: '', phone: ''})
   const [filter, setFilter] = useState('')
@@ -62,51 +62,26 @@ const hook = () => {
   		setFilter(event.target.value)
   }
 
-  const handlePersonDelete = (event) =>{
-  	let namer = event.target.parentNode.getAttribute('name')
-  	let pid_to_delete = persons.find(p => p.name == namer ).id
-  	
-  	if(window.confirm("Delete "+ namer + "?"))
-  	{
-
-	  	console.log('deleted',namer, pid_to_delete)
-	  	personService.deleter(pid_to_delete).then(updatePersons => {
-	        hook()
-	      })
-        
-  	}
-  }
-
   const addName = (event) =>{
   		event.preventDefault()
   		
   		if(persons.filter(p => p.name == newName.name).length)
 
-  			{
-  				/*
+  			{//	console.log("this is true")
   				alert(`${newName.name} is already added to phonebook`)
-  				setNewName({name: '', phone: ''})*/
-
-  				if(window.confirm(`${newName.name} is already added to phonebook, replace the old number with the new one?`)){
-  					let pid_to_update = persons.find(p => p.name == newName.name ).id	
-  					let fndPerson   = persons.find(p => p.id == pid_to_update )
-  					let changedPerson = {...fndPerson,phone: newName.phone}
-  					personService.update(pid_to_update,changedPerson).then(updatedPersons => {
-  						hook()
-  						setNewName({name: '', phone: ''})
-  					})
-  					
-  				}
-
+  				setNewName({name: '', phone: ''})
   			}
   		else
   			{
-  	
-
-				    personService.create(newName)
-        			.then(returnedPersons => {
-        			setPersons(persons.concat(returnedPersons))
-				      })    
+  				//console.log("this is false")
+  				 axios
+				    .post('http://localhost:3001/persons', newName)
+				    .then(response => {
+				      console.log(response)
+				      //setPersons(response.data)
+				      hook()
+				      setNewName({name: '', phone: ''})
+				    })
   				
   			}
   			
@@ -129,7 +104,7 @@ const personsToShow = filter.length > 0 ? persons.filter( p => p.name.substr(0,f
 
       <h3>Numbers</h3>
       
-      <div><Persons thePeople = {personsToShow} delHandle = {handlePersonDelete}/></div>
+      <div><Persons thePeople = {personsToShow} /></div>
     </div>
   )
 }

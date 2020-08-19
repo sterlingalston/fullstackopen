@@ -83,21 +83,8 @@ const hook = () => {
   		if(persons.filter(p => p.name == newName.name).length)
 
   			{
-  				/*
   				alert(`${newName.name} is already added to phonebook`)
-  				setNewName({name: '', phone: ''})*/
-
-  				if(window.confirm(`${newName.name} is already added to phonebook, replace the old number with the new one?`)){
-  					let pid_to_update = persons.find(p => p.name == newName.name ).id	
-  					let fndPerson   = persons.find(p => p.id == pid_to_update )
-  					let changedPerson = {...fndPerson,phone: newName.phone}
-  					personService.update(pid_to_update,changedPerson).then(updatedPersons => {
-  						hook()
-  						setNewName({name: '', phone: ''})
-  					})
-  					
-  				}
-
+  				setNewName({name: '', phone: ''})
   			}
   		else
   			{
