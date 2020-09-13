@@ -83,10 +83,7 @@ const hook = () => {
           hook()
         }
 
-        ).catch(
-          error => {
-          setErrorMessage( {message: `Information of '${namer}' was already removed from server`, class: "error"})
-        })
+        )
         
   	}
   }
