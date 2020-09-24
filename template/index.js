@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+<<<<<<< HEAD
 const morgan = require('morgan')
 //const morganBody = require('morgan-body')
 
@@ -13,6 +14,10 @@ morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :response-time ms :body'))
 
 
+=======
+
+app.use(express.json())
+>>>>>>> 833b7155a35689112a1bc69fce0ccb49e38ba4fa
 
 let persons = [
   {
@@ -73,7 +78,11 @@ const generateId = () => {
   return Math.round(Math.random(1,10000)*1000,0)
 }
 
+<<<<<<< HEAD
 app.post('/api/persons', jsonParser ,(request, response) => {
+=======
+app.post('/api/persons', (request, response) => {
+>>>>>>> 833b7155a35689112a1bc69fce0ccb49e38ba4fa
   const body = request.body
 
   let fndper = persons.find(bname => bname.name === body.name)
