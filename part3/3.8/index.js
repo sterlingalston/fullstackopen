@@ -10,6 +10,7 @@ var jsonParser = bodyParser.json()
 
 morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
 
+//logging
 app.use(morgan(':method :url :status :response-time ms :body'))
 
 

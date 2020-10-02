@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
-<<<<<<< HEAD
-const morgan = require('morgan')
+//const morgan = require('morgan')
 //const morganBody = require('morgan-body')
 
 var bodyParser = require('body-parser')
@@ -9,15 +8,16 @@ var jsonParser = bodyParser.json()
 
 //morganBody(app)
 
-morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
+//morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
 
-app.use(morgan(':method :url :status :response-time ms :body'))
+//logging
+//app.use(morgan(':method :url :status :response-time ms :body'))
 
+const cors = require('cors')
 
-=======
+app.use(cors())
 
-app.use(express.json())
->>>>>>> 833b7155a35689112a1bc69fce0ccb49e38ba4fa
+app.use(express.static('build'))
 
 let persons = [
   {
@@ -78,11 +78,7 @@ const generateId = () => {
   return Math.round(Math.random(1,10000)*1000,0)
 }
 
-<<<<<<< HEAD
 app.post('/api/persons', jsonParser ,(request, response) => {
-=======
-app.post('/api/persons', (request, response) => {
->>>>>>> 833b7155a35689112a1bc69fce0ccb49e38ba4fa
   const body = request.body
 
   let fndper = persons.find(bname => bname.name === body.name)
@@ -112,7 +108,7 @@ app.post('/api/persons', (request, response) => {
   response.json(person)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
