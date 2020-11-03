@@ -57,26 +57,26 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/info', (req, res) => {
-  Person.count({}).then(cnt => {
-      res.send(`<p>Phonebook has info for ${cnt} people</p>
-    <p>${new Date()}</p>`)
-  })
-
+  res.send(`<p>Phonebook has info for ${persons.length} people</p>
+  <p>${new Date()}</p>`)
 })
 
 app.get('/api/persons/:id', (request, response) => {
-
-
-  Person.findById(request.params.id).then(note => {
-    response.json(note)
-  })
-
+  const id = Number(request.params.id)
+  const person = persons.find(person => person.id === id)
+  
+  if (person) {
+    response.json(person)
+  } else {
+    response.status(404).end()
+  }
 })
 
-
 app.delete('/api/persons/:id', (request, response) => {
-    const id = String(request.params.id)
-    Person.deleteOne({_id:`${id}`}, person => response.json(person))
+  const id = Number(request.params.id)
+  persons = persons.filter(person => person.id !== id)
+
+  response.status(204).end()
 })
 
 const generateId = () => {
@@ -86,48 +86,32 @@ const generateId = () => {
 
 app.post('/api/persons', jsonParser ,(request, response) => {
   const body = request.body
-  let fndper = false
-  
+
+  let fndper = persons.find(bname => bname.name === body.name)
+
   if (!body.name || !body.number) {
     return response.status(400).json({ 
       error: 'name or number missing' 
     })
   }
 
-  const qry_person_fnd = Person.where({ name: `${body.name}` })
-  
-  qry_person_fnd.findOne((err, p_fnd) => {
 
-    try
-    {
-      console.log('p_fnd == body', p_fnd.name == body.name)
-      fndper = body.name == p_fnd.name
+  if (fndper) {
+    return response.status(400).json({ 
+      error: 'name must be unique' 
+    })
+  }
 
-      if (fndper) {
-        return response.status(400).json({ 
-          error: 'name must be unique' 
-        })
-      }
-    }
+  const person = {
+    id: generateId(),
+    name: body.name,
+    number: body.number
     
-    catch(err){
-      console.log(`${body.name} looks like it's unique!`)
-       const person = new Person({
-    
-        name: body.name,
-        number: body.number
-      
-      })
+  }
 
-      person.save().then(savedPerson => {
-        response.json(savedPerson)
-      })
-    }
+  persons = persons.concat(person)
 
-  })
-  
-
-
+  response.json(person)
 })
 
 const PORT = process.env.PORT || 3001
